@@ -1,0 +1,18 @@
+// ----- vscode-neovim settings -----
+"vscode-neovim.compositeKeys": {
+"jk": {
+  "command": "vscode-neovim.send",
+  "when": "editorTextFocus && neovim.mode == 'insert'",
+  "args": ["<Esc>"]
+},
+"kj": {
+  "command": "vscode-neovim.send",
+  "when": "editorTextFocus && neovim.mode == 'insert'",
+  "args": ["<Esc>"]
+}
+},
+"vscode-neovim.neovimExecutablePaths.win32": "nvim", // if nvim is on PATH; else full path
+"vscode-neovim.neovimInitVimPaths.win32": "C:\\Users\\Hossein\\AppData\\Local\\nvim\\init.lua",
+"vscode-neovim.useWSL": false,
+"vscode-neovim.ctrlKeysForInsertMode": [],
+"vscode-neovim.ctrlKeysForNormalMode": [],
