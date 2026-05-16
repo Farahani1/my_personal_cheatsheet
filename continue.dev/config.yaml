@@ -1,0 +1,189 @@
+# config.yaml
+name: Example Project
+version: 1.1.0
+schema: v1
+
+models:
+  # Heavy cloud model – used for chat, edit, and applying code blocks
+  - name: Qwen3-30B (Cloud)
+    provider: openai
+    model: Qwen3-30B-A3B-to0dg-10
+    apiBase: http://
+    apiKey: ky
+    contextLength: 40000
+    roles:
+      - chat
+      - edit
+      - apply
+
+  # Local model – quick manual chat alternative
+  - name: qwen2.5-coder:1.5b (Chat)
+    provider: ollama
+    model: qwen2.5-coder:1.5b
+    apiBase: http://localhost:11434
+    contextLength: 8192
+    roles:
+      - chat
+
+  # Local model – fast inline code completions
+  - name: qwen2.5-coder:1.5b (Autocomplete)
+    provider: ollama
+    model: qwen2.5-coder:1.5b
+    apiBase: http://localhost:11434
+    roles:
+      - autocomplete
+
+  # Cloud embeddings model – for @codebase search
+  - name: Bge-m3 (Cloud)
+    provider: openai
+    model: Bge-m3-9wmlt
+    apiBase: https://
+    apiKey: ky
+    roles:
+      - embed
+    embedOptions:
+      maxChunkSize: 512
+
+# Context providers
+context:
+  - provider: codebase
+  - provider: diff
+  - provider: terminal
+  - provider: problems
+  - provider: folder
+  - provider: code
+
+# =========================
+# 🔥 CUSTOM PROMPTS (ACTIONS)
+# =========================
+prompts:
+
+  - name: optimize
+    description: Optimize selected Python code
+    prompt: |
+      Analyze the following Python code for performance improvements.
+
+      Focus on:
+      - Time complexity
+      - Memory usage
+      - Pythonic idioms
+      - Built-in alternatives
+
+      Return improved version of the code.
+
+      Code:
+      {{input}}
+
+  - name: docstring
+    description: Add Google-style docstring
+    prompt: |
+      Add a Google-style docstring to this Python code.
+
+      Return ONLY the updated code.
+
+      Code:
+      {{input}}
+
+  - name: testfix
+    description: Analyze pytest failures
+    prompt: |
+      The following pytest output shows test failures:
+
+      {{input}}
+
+      Tasks:
+      1. Identify root causes
+      2. Explain failures clearly
+      3. Suggest fixes in code
+      4. Provide corrected code snippets
+
+      Use relevant project context if needed:
+      @codebase
+
+  - name: arch
+    description: Analyze project architecture
+    prompt: |
+      Analyze this codebase.
+
+      Provide:
+      1. High-level architecture overview
+      2. Module dependencies
+      3. Potential circular dependencies
+      4. Refactoring suggestions
+
+      Codebase:
+      @codebase
+
+  - name: review
+    description: Review recent code changes
+    prompt: |
+      Review the following code changes:
+
+      @diff
+
+      Provide:
+      - Bugs and logical errors
+      - Performance issues
+      - Code quality improvements
+      - Security concerns (if any)
+
+  - name: refactor
+    description: Refactor code for clarity and maintainability
+    prompt: |
+      Refactor this code for clarity, maintainability, and structure.
+
+      Constraints:
+      - Preserve functionality
+      - Improve readability
+      - Use clean architecture principles
+
+      Code:
+      {{input}}
+
+  - name: debug
+    description: Debug an issue using logs or errors
+    prompt: |
+      Debug the following issue.
+
+      Input (logs, error, or description):
+      {{input}}
+
+      Steps:
+      1. Identify root cause
+      2. Explain why it happens
+      3. Suggest fix
+      4. Provide corrected code if applicable
+
+      Relevant code:
+      @codebase
+
+  - name: rag-debug
+    description: Debug RAG pipeline or retrieval issues
+    prompt: |
+      You are analyzing a Retrieval-Augmented Generation (RAG) system.
+
+      Problem:
+      {{input}}
+
+      Tasks:
+      1. Identify failure point (retrieval, embedding, ranking, generation)
+      2. Suggest improvements
+      3. Evaluate chunking strategy
+      4. Suggest better retrieval or reranking methods
+
+      Relevant code:
+      @codebase
+
+  - name: explain
+    description: Explain code deeply
+    prompt: |
+      Explain the following code in detail.
+
+      Include:
+      - What it does
+      - How it works
+      - Key design decisions
+      - Potential issues
+
+      Code:
+      {{input}}
